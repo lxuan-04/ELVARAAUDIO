@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ELFARA AUDIO - Sound System Store</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg:#0b0d10;--panel:#14191f;--line:#29313a;
+  --text:#f4f5f6;--muted:#9aa4af;--gold:#d6a85c;
+  --green:#65c18c;--red:#e05c5c;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text)}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+.wrap{max-width:1180px;margin:auto;padding:0 22px}
+header{position:sticky;top:0;background:#0b0d10ed;border-bottom:1px solid var(--line);z-index:10}
+.nav{height:75px;display:flex;align-items:center;justify-content:space-between;gap:15px}
+.brand{font:800 23px Manrope;letter-spacing:1px}
+.brand span,.gold{color:var(--gold)}
+.navlinks{display:flex;gap:23px}
+.navlinks a{color:#ddd;text-decoration:none;font-size:13px}
+.nav-actions{display:flex;gap:9px}
+.btn{padding:11px 16px;border:1px solid var(--gold);border-radius:6px;background:var(--gold);color:#17130c;font-weight:700;font-size:13px}
+.btn:hover{opacity:.85}
+.btn.ghost{background:transparent;color:var(--gold)}
+.btn.dark{background:#252d35;border-color:#39434d;color:white}
+.btn.danger{background:#482528;border-color:#74383d;color:white}
+.btn.small{padding:7px 10px;font-size:11px}
+.cart-pill{background:var(--panel);color:white;border:1px solid var(--line);padding:10px;border-radius:6px}
+.hero{min-height:480px;display:flex;align-items:center;background:linear-gradient(90deg,#0b0d10 10%,#0b0d10d9 60%,#0b0d1050),url('https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=1600&q=80') center/cover}
+.hero-content{max-width:650px;padding:80px 0}
+.eyebrow{color:var(--gold);letter-spacing:3px;font-size:11px;font-weight:bold}
+h1{font:800 clamp(38px,6vw,65px)/1.1 Manrope;margin:18px 0}
+.hero p{color:#bdc4ca;line-height:1.8;margin-bottom:25px}
+section{padding:65px 0}
+.section-head{margin-bottom:25px}
+.section-head h2{font:800 30px Manrope;margin:8px 0}
+.muted{color:var(--muted)}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px}
+.field{background:#0e1216;border:1px solid var(--line);border-radius:6px;padding:11px;color:white;outline:none;min-width:0}
+.field:focus{border-color:var(--gold)}
+.toolbar .field{flex:1;min-width:170px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.product{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.product img{width:100%;height:210px;object-fit:cover;background:#20262c}
+.product-info{padding:16px}
+.category{font-size:10px;color:var(--gold);letter-spacing:2px;text-transform:uppercase}
+.product h3{font:700 16px Manrope;margin:8px 0}
+.product p{font-size:12px;color:var(--muted);line-height:1.6;min-height:38px}
+.product-bottom{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:16px}
+.price{color:var(--gold);font-weight:bold}
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.feature,.panel{background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:20px}
+.feature p{font-size:13px;color:var(--muted);line-height:1.7;margin-top:8px}
+footer{border-top:1px solid var(--line);padding:25px;color:var(--muted);font-size:12px}
+.overlay{position:fixed;inset:0;background:#000c;z-index:50;display:flex;align-items:center;justify-content:center;padding:15px}
+.modal{width:min(600px,100%);max-height:92vh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:22px}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.modal h3{font:700 20px Manrope}
+.close{background:none;border:0;color:white;font-size:25px}
+.formgroup{margin-bottom:13px}
+.formlabel{display:block;color:var(--muted);font-size:12px;margin-bottom:6px}
+.formgroup .field{width:100%}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.full{grid-column:1/-1}
+.cart-row{display:flex;justify-content:space-between;gap:12px;padding:13px 0;border-bottom:1px solid var(--line);font-size:13px}
+.cart-row small{display:block;color:var(--muted);margin-top:4px}
+.qty{display:flex;align-items:center;gap:7px}
+.qty button{background:#252d35;color:white;border:1px solid #39434d;border-radius:4px;padding:4px 9px}
+.total-line{display:flex;justify-content:space-between;font-weight:bold;font-size:17px;margin:18px 0}
+.notice{background:#252d35;border:1px solid #39434d;border-radius:7px;padding:13px;font-size:12px;line-height:1.7;margin-bottom:15px}
+.admin-shell{min-height:100vh}
+.admin-top{padding:17px 23px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+.admin-layout{display:grid;grid-template-columns:210px 1fr;min-height:calc(100vh - 65px)}
+.sidebar{border-right:1px solid var(--line);padding:15px}
+.side-link{width:100%;text-align:left;padding:12px;background:none;border:0;color:#bbc2c9;border-radius:6px;margin-bottom:5px}
+.side-link.active,.side-link:hover{background:#d6a85c20;color:var(--gold)}
+.admin-main{padding:25px;min-width:0}
+.admin-title{font:800 25px Manrope;margin-bottom:7px}
+.admin-sub{color:var(--muted);font-size:13px;margin-bottom:22px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.stat{padding:17px;background:var(--panel);border:1px solid var(--line);border-radius:8px}
+.stat small{color:var(--muted)}
+.stat strong{display:block;color:var(--gold);font:800 20px Manrope;margin-top:9px}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:620px;font-size:12px}
+th,td{text-align:left;padding:12px 9px;border-bottom:1px solid var(--line)}
+th{color:var(--muted)}
+.status{font-size:10px;padding:5px 8px;border-radius:15px;background:#263c31;color:#9ae0b5}
+.status.pending{background:#493c25;color:#f2ce83}
+.empty{text-align:center;color:var(--muted);padding:25px;font-size:13px}
+.admin-product-img{width:38px;height:34px;object-fit:cover;vertical-align:middle;margin-right:7px;border-radius:4px}
+@media(max-width:800px){
+ .navlinks{display:none}.grid{grid-template-columns:repeat(2,1fr)}
+ .admin-layout{grid-template-columns:1fr}.sidebar{display:flex;overflow:auto;border-bottom:1px solid var(--line)}
+ .side-link{white-space:nowrap;width:auto}.stats{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:520px){
+ .wrap{padding:0 15px}.grid,.features{grid-template-columns:1fr}
+ .formgrid{grid-template-columns:1fr}.full{grid-column:auto}
+ .admin-main{padding:14px}.stats{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+
+<body>
+
+<div id="storefront">
+<header>
+ <div class="wrap nav">
+  <div class="brand">ELFARA <span>AUDIO</span></div>
+  <nav class="navlinks">
+   <a href="#home">Beranda</a>
+   <a href="#produk">Produk</a>
+   <a href="#keunggulan">Keunggulan</a>
+   <a href="#kontak">Kontak</a>
+  </nav>
+  <div class="nav-actions">
+   <button class="cart-pill" onclick="openCart()">Keranjang (<span id="cartCount">0</span>)</button>
+   <button class="btn ghost" onclick="showLogin()">Admin</button>
+  </div>
+ </div>
+</header>
+
+<section class="hero" id="home">
+ <div class="wrap">
+  <div class="hero-content">
+   <div class="eyebrow">PREMIUM AUDIO EQUIPMENT</div>
+   <h1>Rasakan Detail.<br><span class="gold">Kuasai Suara.</span></h1>
+   <p>Temukan perlengkapan sound system pilihan untuk kebutuhan panggung, event, rumah ibadah, studio, hingga instalasi profesional.</p>
+   <a href="#produk" class="btn">JELAJAHI PRODUK</a>
+  </div>
+ </div>
+</section>
+
+<section id="produk">
+ <div class="wrap">
+  <div class="section-head">
+   <div class="eyebrow">KOLEKSI PILIHAN</div>
+   <h2>Produk <span class="gold">ELFARA</span></h2>
+   <p class="muted">Perangkat audio untuk performa suara maksimal.</p>
+  </div>
+  <div class="toolbar">
+   <input id="searchProduct" class="field" placeholder="Cari produk..." oninput="renderProducts()">
+   <select id="categoryFilter" class="field" onchange="renderProducts()">
+    <option value="">Semua kategori</option>
+   </select>
+   <select id="priceFilter" class="field" onchange="renderProducts()">
+    <option value="">Semua harga</option>
+    <option value="1">Di bawah Rp1 juta</option>
+    <option value="2">Rp1 juta - Rp3 juta</option>
+    <option value="3">Di atas Rp3 juta</option>
+   </select>
+  </div>
+  <div class="grid" id="productGrid"></div>
+ </div>
+</section>
+
+<section id="keunggulan">
+ <div class="wrap">
+  <div class="section-head">
+   <div class="eyebrow">MENGAPA ELFARA</div>
+   <h2>Belanja audio lebih <span class="gold">percaya diri</span></h2>
+  </div>
+  <div class="features">
+   <div class="feature"><b>Produk pilihan</b><p>Katalog perangkat audio untuk kebutuhan personal maupun profesional.</p></div>
+   <div class="feature"><b>Pembayaran praktis</b><p>Bayar pesanan melalui transfer rekening BCA.</p></div>
+   <div class="feature"><b>Verifikasi admin</b><p>Unggah bukti transfer dan tunggu konfirmasi pembayaran dari admin.</p></div>
+  </div>
+ </div>
+</section>
+
+<section id="kontak">
+ <div class="wrap panel" style="text-align:center">
+  <div class="eyebrow">ELFARA AUDIO</div>
+  <h2 style="margin:10px">Mari bangun sistem suara terbaik.</h2>
+  <p class="muted">Premium Sound System & Audio Equipment</p>
+ </div>
+</section>
+<footer><div class="wrap">© <span id="year"></span> ELFARA AUDIO. All rights reserved.</div></footer>
+</div>
+
+<div id="overlay" class="overlay hidden" onclick="overlayClose(event)">
+ <div class="modal" id="modal"></div>
+</div>
+
+<div id="adminApp" class="admin-shell hidden">
+ <div class="admin-top">
+  <div class="brand">ELFARA <span>AUDIO</span> / ADMIN</div>
+  <div>
+   <button class="btn dark small" onclick="backToStore()">Lihat Toko</button>
+   <button class="btn danger small" onclick="logout()">Keluar</button>
+  </div>
+ </div>
+ <div class="admin-layout">
+  <aside class="sidebar">
+   <button class="side-link active" data-tab="dashboard" onclick="adminTab('dashboard')">Dashboard</button>
+   <button class="side-link" data-tab="products" onclick="adminTab('products')">Produk & Stok</button>
+   <button class="side-link" data-tab="orders" onclick="adminTab('orders')">Pesanan & Pembayaran</button>
+  </aside>
+  <main class="admin-main" id="adminContent"></main>
+ </div>
+</div>
+
+<script>
+// ================= KONFIGURASI TOKO =================
+// Rekening berikut hanya rekening DUMMY untuk simulasi.
+// Ganti dengan rekening toko yang benar sebelum digunakan.
+const CONFIG = {
+ adminUser: "admin",
+ adminPass: "elfara123",
+ bank: "BCA",
+ accountNumber: "1234567890",
+ accountName: "ELFARA AUDIO (DEMO)"
+};
+
+const DEFAULT_PRODUCTS = [
+ {id:1,name:"Speaker Full Range 15 Inch",category:"Speaker",price:2750000,stock:8,description:"Speaker profesional untuk kebutuhan panggung dan event.",image:"https://images.unsplash.com/photo-1545454675-3531b543be5d?auto=format&fit=crop&w=900&q=80"},
+ {id:2,name:"Power Amplifier Pro Series",category:"Amplifier",price:3850000,stock:5,description:"Amplifier bertenaga untuk sistem audio profesional.",image:"https://images.unsplash.com/photo-1593078166034-5e6c7c3d6c44?auto=format&fit=crop&w=900&q=80"},
+ {id:3,name:"Subwoofer 18 Inch",category:"Speaker",price:4650000,stock:4,description:"Low frequency bertenaga dengan karakter bass mantap.",image:"https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=900&q=80"},
+ {id:4,name:"Digital Audio Mixer",category:"Mixer",price:3200000,stock:6,description:"Kontrol audio fleksibel untuk live event dan studio.",image:"https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=900&q=80"},
+ {id:5,name:"Wireless Microphone Set",category:"Mikrofon",price:1250000,stock:12,description:"Mikrofon wireless praktis untuk presentasi dan panggung.",image:"https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&w=900&q=80"},
+ {id:6,name:"Speaker Monitor 12 Inch",category:"Speaker",price:2150000,stock:7,description:"Monitor panggung dengan suara jernih dan detail.",image:"https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=900&q=80"}
+];
+
+const readData = (key, fallback) => {
+ try {
+  const value = localStorage.getItem(key);
+  return value ? JSON.parse(value) : fallback;
+ } catch(e) { return fallback; }
+};
+
+let products = readData("elfara_products", DEFAULT_PRODUCTS);
+let orders = readData("elfara_orders", []);
+let cart = readData("elfara_cart", []);
+let activeTab = "dashboard";
+let uploadedImage = "";
+let uploadedProof = "";
+
+const money = n => new Intl.NumberFormat("id-ID", {
+ style:"currency",currency:"IDR",maximumFractionDigits:0
+}).format(Number(n)||0);
+
+const save = () => {
+ localStorage.setItem("elfara_products", JSON.stringify(products));
+ localStorage.setItem("elfara_orders", JSON.stringify(orders));
+ localStorage.setItem("elfara_cart", JSON.stringify(cart));
+};
+
+const escapeHTML = value => String(value ?? "").replace(/[&<>"']/g, c => ({
+ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+}[c]));
+
+function init() {
+ document.getElementById("year").textContent = new Date().getFullYear();
+ updateCategories();
+ renderProducts();
+ updateCartCount();
+}
+
+function updateCategories() {
+ const select = document.getElementById("categoryFilter");
+ const old = select.value;
+ const categories = [...new Set(products.map(p=>p.category))];
+ select.innerHTML = '<option value="">Semua kategori</option>' +
+ categories.map(c=>`<option value="${escapeHTML(c)}">${escapeHTML(c)}</option>`).join("");
+ select.value = old;
+}
+
+function renderProducts() {
+ const query = document.getElementById("searchProduct").value.toLowerCase();
+ const category = document.getElementById("categoryFilter").value;
+ const price = document.getElementById("priceFilter").value;
+
+ const list = products.filter(p => {
+  const matchesText = (p.name+" "+p.description).toLowerCase().includes(query);
+  const matchesCategory = !category || p.category === category;
+  const matchesPrice = !price ||
+   (price==="1" && p.price<1000000) ||
+   (price==="2" && p.price>=1000000 && p.price<=3000000) ||
+   (price==="3" && p.price>3000000);
+  return matchesText && matchesCategory && matchesPrice;
+ });
+
+ document.getElementById("productGrid").innerHTML = list.length
+ ? list.map(p=>`
+  <article class="product">
+   <img src="${escapeHTML(p.image)}" alt="${escapeHTML(p.name)}"
+    onerror="this.src='https://placehold.co/800x500/20262c/d6a85c?text=ELFARA+AUDIO'">
+   <div class="product-info">
+    <div class="category">${escapeHTML(p.category)}</div>
+    <h3>${escapeHTML(p.name)}</h3>
+    <p>${escapeHTML(p.description)}</p>
+    <div class="product-bottom">
+     <span class="price">${money(p.price)}</span>
+     <button class="btn small" ${p.stock<=0?"disabled":""} onclick="addCart(${p.id})">
+      ${p.stock<=0?"Stok habis":"+ Keranjang"}
+     </button>
+    </div>
+    <small class="muted">Stok: ${p.stock}</small>
+   </div>
+  </article>`).join("")
+ : '<div class="empty">Produk tidak ditemukan.</div>';
+}
+
+function updateCartCount() {
+ document.getElementById("cartCount").textContent =
+ cart.reduce((sum,item)=>sum+item.qty,0);
+}
+
+function addCart(id) {
+ const product = products.find(p=>p.id===id);
+ if(!product || product.stock<1) return alert("Stok produk habis.");
+
+ const item = cart.find(i=>i.id===id);
+ if(item) {
+  if(item.qty>=product.stock) return alert("Jumlah melebihi stok tersedia.");
+  item.qty++;
+ } else cart.push({id,qty:1});
+
+ save();
+ updateCartCount();
+ alert("Produk berhasil ditambahkan ke keranjang.");
+}
+
+function showModal(html) {
+ document.getElementById("modal").innerHTML = html;
+ document.getElementById("overlay").classList.remove("hidden");
+}
+
+function closeModal() {
+ document.getElementById("overlay").classList.add("hidden");
+}
+
+function overlayClose(e) {
+ if(e.target.id==="overlay") closeModal();
+}
+
+function openCart() {
+ let total = 0;
+ const rows = cart.map(item=>{
+  const p = products.find(x=>x.id===item.id);
+  if(!p) return "";
+  total += p.price*item.qty;
+
+  return `
+   <div class="cart-row">
+    <div><b>${escapeHTML(p.name)}</b><small>${money(p.price)}</small></div>
+    <div class="qty">
+     <button onclick="changeQty(${p.id},-1)">−</button>
+     <b>${item.qty}</b>
+     <button onclick="changeQty(${p.id},1)">+</button>
+     <button class="btn danger small" onclick="removeCart(${p.id})">×</button>
+    </div>
+   </div>`;
+ }).join("");
+
+ showModal(`
+  <div class="modal-head">
+   <h3>Keranjang Belanja</h3>
+   <button class="close" onclick="closeModal()">×</button>
+  </div>
+  ${rows || '<div class="empty">Keranjang masih kosong.</div>'}
+  <div class="total-line"><span>Total</span><span class="gold">${money(total)}</span></div>
+  <button class="btn" style="width:100%" onclick="checkout()">LANJUT CHECKOUT</button>
+ `);
+}
+
+function changeQty(id, amount) {
+ const item = cart.find(i=>i.id===id);
+ const product = products.find(p=>p.id===id);
+ if(!item || !product) return;
+
+ item.qty += amount;
+ if(item.qty<1) cart = cart.filter(i=>i.id!==id);
+ if(item.qty>product.stock) {
+  item.qty = product.stock;
+  alert("Jumlah dibatasi sesuai stok.");
+ }
+
+ save();
+ updateCartCount();
+ openCart();
+}
+
+function removeCart(id) {
+ cart = cart.filter(i=>i.id!==id);
+ save();
+ updateCartCount();
+ openCart();
+}
+
+// CHECKOUT INTERNAL WEBSITE
+function checkout() {
+ if(!cart.length) return alert("Keranjang masih kosong.");
+
+ let total = 0;
+ cart.forEach(item=>{
+  const p = products.find(x=>x.id===item.id);
+  if(!p || p.stock<item.qty) {
+   alert("Stok produk tidak mencukupi. Periksa keranjang.");
+   throw new Error("Stok tidak cukup");
+  }
+  total += p.price*item.qty;
+ });
+
+ showModal(`
+  <div class="modal-head">
+   <h3>Checkout Pesanan</h3>
+   <button class="close" onclick="closeModal()">×</button>
+  </div>
+
+  <div class="notice">
+   Isi data pengiriman dengan benar. Setelah pesanan dibuat, website akan menampilkan rekening BCA untuk pembayaran.
+  </div>
+
+  <form onsubmit="createOrder(event)">
+   <div class="formgroup">
+    <label class="formlabel">Nama lengkap</label>
+    <input class="field" name="customer" required placeholder="Nama penerima">
+   </div>
+   <div class="formgrid">
+    <div class="formgroup">
+     <label class="formlabel">Nomor HP</label>
+     <input class="field" name="phone" required placeholder="08xxxxxxxxxx">
+    </div>
+    <div class="formgroup">
+     <label class="formlabel">Kode pos</label>
+     <input class="field" name="postal" placeholder="Kode pos">
+    </div>
+    <div class="formgroup full">
+     <label class="formlabel">Alamat lengkap</label>
+     <textarea class="field" name="address" required style="width:100%;min-height:75px" placeholder="Jalan, desa, kecamatan, kabupaten"></textarea>
+    </div>
+   </div>
+   <div class="total-line">
+    <span>Total pembayaran</span><span class="gold">${money(total)}</span>
+   </div>
+   <button class="btn" style="width:100%">BUAT PESANAN</button>
+  </form>
+ `);
+}
+
+function createOrder(event) {
+ event.preventDefault();
+ const form = event.target;
+ const data = new FormData(form);
+
+ const items = cart.map(item=>{
+  const p = products.find(x=>x.id===item.id);
+  return {id:p.id,name:p.name,price:p.price,qty:item.qty};
+ });
+
+ const total = items.reduce((sum,i)=>sum+i.price*i.qty,0);
+
+ const order = {
+  id:"ELF"+Date.now(),
+  date:new Date().toISOString(),
+  customer:data.get("customer").trim(),
+  phone:data.get("phone").trim(),
+  address:data.get("address").trim(),
+  postal:data.get("postal").trim(),
+  items,
+  total,
+  paymentStatus:"Menunggu Pembayaran",
+  orderStatus:"Menunggu Pembayaran",
+  proof:"",
+  proofName:""
+ };
+
+ orders.unshift(order);
+ cart.forEach(item=>{
+  const p=products.find(x=>x.id===item.id);
+  if(p) p.stock-=item.qty;
+ });
+ cart=[];
+ save();
+ updateCartCount();
+ renderProducts();
+ showPayment(order.id);
+}
+
+function showPayment(orderId) {
+ const order=orders.find(o=>o.id===orderId);
+ if(!order) return;
+
+ showModal(`
+  <div class="modal-head">
+   <h3>Pembayaran Pesanan</h3>
+   <button class="close" onclick="closeModal()">×</button>
+  </div>
+
+  <div class="notice">
+   Pesanan berhasil dibuat. Silakan transfer sesuai nominal berikut.
+   <br><b>Rekening demo — tidak menerima transfer sungguhan.</b>
+  </div>
+
+  <p class="muted">Kode pesanan</p>
+  <h3 class="gold">${order.id}</h3>
+
+  <div class="panel" style="margin:15px 0">
+   <p class="muted">Bank tujuan</p>
+   <h3>${CONFIG.bank}</h3>
+   <p class="muted" style="margin-top:12px">Nomor rekening</p>
+   <h2 class="gold">${CONFIG.accountNumber}</h2>
+   <button class="btn dark small" onclick="copyAccount()">Salin nomor rekening</button>
+   <p class="muted" style="margin-top:12px">Atas nama</p>
+   <b>${CONFIG.accountName}</b>
+  </div>
+
+  <div class="total-line">
+   <span>Total transfer</span>
+   <span class="gold">${money(order.total)}</span>
+  </div>
+
+  <div class="formgroup">
+   <label class="formlabel">Upload bukti transfer</label>
+   <input class="field" type="file" accept="image/*" id="proofFile" onchange="previewProof(this)" style="width:100%">
+  </div>
+
+  <img id="proofPreview" style="display:none;width:100%;max-height:180px;object-fit:contain;margin:10px 0;border-radius:7px">
+
+  <button class="btn" style="width:100%" onclick="submitProof('${order.id}')">
+   KIRIM BUKTI PEMBAYARAN
+  </button>
+  <p class="muted" style="font-size:11px;margin-top:12px">
+   Status pembayaran saat ini: ${order.paymentStatus}
+  </p>
+ `);
+}
+
+function copyAccount() {
+ navigator.clipboard?.writeText(CONFIG.accountNumber)
+  .then(()=>alert("Nomor rekening berhasil disalin."))
+  .catch(()=>alert("Nomor rekening: "+CONFIG.accountNumber));
+}
+
+function previewProof(input) {
+ const file=input.files[0];
+ if(!file) return;
+
+ if(file.size>1500000) {
+  alert("Ukuran bukti transfer maksimal 1,5 MB.");
+  input.value="";
+  return;
+ }
+
+ const reader=new FileReader();
+ reader.onload=()=>{
+  uploadedProof=reader.result;
+  const img=document.getElementById("proofPreview");
+  img.src=uploadedProof;
+  img.style.display="block";
+ };
+ reader.readAsDataURL(file);
+}
+
+function submitProof(orderId) {
+ const order=orders.find(o=>o.id===orderId);
+ const file=document.getElementById("proofFile").files[0];
+
+ if(!order) return;
+ if(!uploadedProof && !file) return alert("Silakan pilih bukti transfer terlebih dahulu.");
+
+ order.proof=uploadedProof;
+ order.proofName=file ? file.name : "Bukti transfer";
+ order.paymentStatus="Menunggu Verifikasi";
+ order.orderStatus="Menunggu Verifikasi";
+
+ uploadedProof="";
+ save();
+
+ showModal(`
+  <div class="modal-head">
+   <h3>Bukti Pembayaran Dikirim</h3>
+   <button class="close" onclick="closeModal()">×</button>
+  </div>
+  <div class="notice">
+   Bukti transfer berhasil disimpan pada demo website.
+   Admin perlu memeriksa pembayaran sebelum pesanan diproses.
+  </div>
+  <h3 class="gold">${order.id}</h3>
+  <p style="margin-top:12px">Status: <b>Menunggu Verifikasi</b></p>
+  <button class="btn" style="width:100%;margin-top:18px" onclick="closeModal()">SELESAI</button>
+ `);
+}
+
+// LOGIN ADMIN
+function showLogin() {
+ showModal(`
+  <div class="modal-head">
+   <h3>Login Admin</h3>
+   <button class="close" onclick="closeModal()">×</button>
+  </div>
+  <form onsubmit="login(event)">
+   <div class="formgroup">
+    <label class="formlabel">Username</label>
+    <input class="field" id="loginUser" required style="width:100%">
+   </div>
+   <div class="formgroup">
+    <label class="formlabel">Password</label>
+    <input class="field" id="loginPass" type="password" required style="width:100%">
+   </div>
+   <p id="loginError" style="color:#ff9292;font-size:12px;margin-bottom:12px"></p>
+   <button class="btn" style="width:100%">MASUK DASHBOARD</button>
+  </form>
+  <p class="muted" style="font-size:11px;margin-top:13px">Demo: admin / elfara123</p>
+ `);
+}
+
+function login(event) {
+ event.preventDefault();
+
+ if(document.getElementById("loginUser").value===CONFIG.adminUser &&
+    document.getElementById("loginPass").value===CONFIG.adminPass) {
+  sessionStorage.setItem("elfara_admin","1");
+  closeModal();
+  document.getElementById("storefront").classList.add("hidden");
+  document.getElementById("adminApp").classList.remove("hidden");
+  adminTab("dashboard");
+ } else {
+  document.getElementById("loginError").textContent="Username atau password salah.";
+ }
+}
+
+function logout() {
+ sessionStorage.removeItem("elfara_admin");
+ document.getElementById("adminApp").classList.add("hidden");
+ document.getElementById("storefront").classList.remove("hidden");
+}
+
+function backToStore() {
+ document.getElementById("adminApp").classList.add("hidden");
+ document.getElementById("storefront").classList.remove("hidden");
+}
+
+function adminTab(tab) {
+ activeTab=tab;
+ document.querySelectorAll(".side-link").forEach(b=>
+  b.classList.toggle("active",b.dataset.tab===tab)
+ );
+
+ if(tab==="dashboard") dashboard();
+ if(tab==="products") productAdmin();
+ if(tab==="orders") orderAdmin();
+}
+
+function dashboard() {
+ const revenue=orders.filter(o=>o.paymentStatus==="Sudah Dibayar")
+  .reduce((s,o)=>s+o.total,0);
+ const pending=orders.filter(o=>o.paymentStatus==="Menunggu Verifikasi").length;
+ const low=products.filter(p=>p.stock<=3).length;
+
+ document.getElementById("adminContent").innerHTML=`
+  <div class="admin-title">Dashboard</div>
+  <div class="admin-sub">Ringkasan aktivitas ELFARA AUDIO.</div>
+
+  <div class="stats">
+   <div class="stat"><small>Total pesanan</small><strong>${orders.length}</strong></div>
+   <div class="stat"><small>Pendapatan terverifikasi</small><strong>${money(revenue)}</strong></div>
+   <div class="stat"><small>Menunggu verifikasi</small><strong>${pending}</strong></div>
+   <div class="stat"><small>Stok menipis</small><strong>${low}</strong></div>
+  </div>
+
+  <div class="panel">
+   <h3 style="margin-bottom:15px">Pesanan terbaru</h3>
+   ${orders.length?orderTable(orders.slice(0,5)):'<div class="empty">Belum ada pesanan.</div>'}
+  </div>
+ `;
+}
+
+function orderTable(list) {
+ return `
+ <div class="table-wrap">
+  <table>
+   <thead>
+    <tr><th>Kode</th><th>Pelanggan</th><th>Total</th><th>Pembayaran</th><th>Aksi</th></tr>
+   </thead>
+   <tbody>
+    ${list.map(o=>`
+     <tr>
+      <td>${o.id}</td>
+      <td>${escapeHTML(o.customer)}</td>
+      <td>${money(o.total)}</td>
+      <td><span class="status ${o.paymentStatus!=="Sudah Dibayar"?"pending":""}">${o.paymentStatus}</span></td>
+      <td><button class="btn dark small" onclick="viewOrder('${o.id}')">Detail</button></td>
+     </tr>
+    `).join("")}
+   </tbody>
+  </table>
+ </div>`;
+}
+
+function orderAdmin() {
+ document.getElementById("adminContent").innerHTML=`
+  <div class="admin-title">Pesanan & Pembayaran</div>
+  <div class="admin-sub">Periksa bukti transfer dan verifikasi pembayaran pelanggan.</div>
+  <div class="panel">
+   ${orders.length?orderTable(orders):'<div class="empty">Belum ada pesanan.</div>'}
+  </div>
+ `;
+}
+
+function viewOrder(id) {
+ const o=orders.find(x=>x.id===id);
+ if(!o) return;
+
+ showModal(`
+  <div class="modal-head">
+   <h3>Detail Pesanan</h3>
+   <button class="close" onclick="closeModal()">×</button>
+  </div>
+
+  <p class="muted">Kode: ${o.id}</p>
+  <p style="margin:8px 0"><b>${escapeHTML(o.customer)}</b></p>
+  <p class="muted">${escapeHTML(o.phone)}</p>
+  <p class="muted">${escapeHTML(o.address)}</p>
+
+  <hr style="border-color:var(--line);margin:15px 0">
+
+  ${o.items.map(i=>`
+   <div class="cart-row">
+    <span>${escapeHTML(i.name)} × ${i.qty}</span>
+    <b>${money(i.price*i.qty)}</b>
+   </div>
+  `).join("")}
+
+  <div class="total-line"><span>Total</span><span class="gold">${money(o.total)}</span></div>
+
+  <p style="margin:12px 0">Status pembayaran: <b>${o.paymentStatus}</b></p>
+
+  ${o.proof?`
+   <p class="formlabel">Bukti transfer: ${escapeHTML(o.proofName)}</p>
+   <img src="${o.proof}" style="width:100%;max-height:230px;object-fit:contain;background:#090b0e;border-radius:7px">
+  `:'<div class="notice">Pelanggan belum mengunggah bukti transfer.</div>'}
+
+  <div class="formgroup" style="margin-top:15px">
+   <label class="formlabel">Ubah status pembayaran</label>
+   <select id="paymentStatus" class="field" style="width:100%">
+    ${["Menunggu Pembayaran","Menunggu Verifikasi","Sudah Dibayar","Pembayaran Ditolak"].map(s=>
+     `<option ${o.paymentStatus===s?"selected":""}>${s}</option>`
+    ).join("")}
+   </select>
+  </div>
+
+  <div class="formgroup">
+   <label class="formlabel">Status pesanan</label>
+   <select id="orderStatus" class="field" style="width:100%">
+    ${["Menunggu Pembayaran","Diproses","Dikirim","Selesai","Dibatalkan"].map(s=>
+     `<option ${o.orderStatus===s?"selected":""}>${s}</option>`
+    ).join("")}
+   </select>
+  </div>
+
+  <button class="btn" style="width:100%" onclick="updateOrder('${o.id}')">SIMPAN PERUBAHAN</button>
+ `);
+}
+
+function updateOrder(id) {
+ const order=orders.find(o=>o.id===id);
+ if(!order) return;
+
+ order.paymentStatus=document.getElementById("paymentStatus").value;
+ order.orderStatus=document.getElementById("orderStatus").value;
+
+ save();
+ closeModal();
+ orderAdmin();
+}
+
+// MANAJEMEN PRODUK
+function productAdmin() {
+ document.getElementById("adminContent").innerHTML=`
+  <div class="admin-title">Produk & Manajemen Stok</div>
+  <div class="admin-sub">Tambah, edit, dan hapus produk toko.</div>
+  <div class="panel">
+   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px">
+    <h3>Daftar produk</h3>
+    <button class="btn small" onclick="productForm()">+ Tambah produk</button>
+   </div>
+   <div class="table-wrap">
+    <table>
+     <thead><tr><th>Produk</th><th>Kategori</th><th>Harga</th><th>Stok</th><th>Aksi</th></tr></thead>
+     <tbody>
+      ${products.map(p=>`
+       <tr>
+        <td><img class="admin-product-img" src="${escapeHTML(p.image)}">${escapeHTML(p.name)}</td>
+        <td>${escapeHTML(p.category)}</td>
+        <td>${money(p.price)}</td>
+        <td>${p.stock}</td>
+        <td>
+         <button class="btn dark small" onclick="productForm(${p.id})">Edit</button>
+         <button class="btn danger small" onclick="deleteProduct(${p.id})">Hapus</button>
+        </td>
+       </tr>
+      `).join("")}
+     </tbody>
+    </table>
+   </div>
+  </div>
+ `;
+}
+
+function productForm(id) {
+ const p=id?products.find(x=>x.id===id):{
+  name:"",category:"Speaker",price:"",stock:"",description:"",image:""
+ };
+
+ uploadedImage="";
+
+ showModal(`
+  <div class="modal-head">
+   <h3>${id?"Edit Produk":"Tambah Produk"}</h3>
+   <button class="close" onclick="closeModal()">×</button>
+  </div>
+
+  <form onsubmit="saveProduct(event,${id||"null"})">
+   <div class="formgrid">
+    <div class="formgroup full">
+     <label class="formlabel">Nama produk</label>
+     <input class="field" name="name" required style="width:100%" value="${escapeHTML(p.name)}">
+    </div>
+    <div class="formgroup">
+     <label class="formlabel">Kategori</label>
+     <input class="field" name="category" required style="width:100%" value="${escapeHTML(p.category)}">
+    </div>
+    <div class="formgroup">
+     <label class="formlabel">Harga</label>
+     <input class="field" name="price" type="number" min="0" required style="width:100%" value="${p.price}">
+    </div>
+    <div class="formgroup">
+     <label class="formlabel">Stok</label>
+     <input class="field" name="stock" type="number" min="0" required style="width:100%" value="${p.stock}">
+    </div>
+    <div class="formgroup">
+     <label class="formlabel">Foto produk</label>
+     <input class="field" name="imageFile" type="file" accept="image/*" onchange="previewProduct(this)" style="width:100%">
+    </div>
+    <div class="formgroup full">
+     <label class="formlabel">URL foto (opsional)</label>
+     <input class="field" name="image" style="width:100%" value="${escapeHTML(p.image)}">
+    </div>
+    <div class="formgroup full">
+     <label class="formlabel">Deskripsi</label>
+     <textarea class="field" name="description" style="width:100%;min-height:70px">${escapeHTML(p.description)}</textarea>
+    </div>
+   </div>
+   <button class="btn" style="width:100%">SIMPAN PRODUK</button>
+  </form>
+ `);
+}
+
+function previewProduct(input) {
+ const file=input.files[0];
+ if(!file) return;
+ if(file.size>1000000) {
+  alert("Ukuran gambar maksimal 1 MB.");
+  input.value="";
+  return;
+ }
+
+ const reader=new FileReader();
+ reader.onload=()=>uploadedImage=reader.result;
+ reader.readAsDataURL(file);
+}
+
+function saveProduct(event,id) {
+ event.preventDefault();
+ const data=new FormData(event.target);
+ const old=id?products.find(p=>p.id===id):null;
+
+ const product={
+  id:id||Date.now(),
+  name:data.get("name").trim(),
+  category:data.get("category").trim(),
+  price:Number(data.get("price")),
+  stock:Number(data.get("stock")),
+  description:data.get("description").trim(),
+  image:uploadedImage||data.get("image").trim()||
+   (old?old.image:"https://placehold.co/800x500/20262c/d6a85c?text=ELFARA+AUDIO")
+ };
+
+ if(old) Object.assign(old,product);
+ else products.unshift(product);
+
+ uploadedImage="";
+ save();
+ closeModal();
+ updateCategories();
+ renderProducts();
+ productAdmin();
+}
+
+function deleteProduct(id) {
+ if(!confirm("Yakin ingin menghapus produk ini?")) return;
+ products=products.filter(p=>p.id!==id);
+ cart=cart.filter(i=>i.id!==id);
+ save();
+ updateCartCount();
+ updateCategories();
+ renderProducts();
+ productAdmin();
+}
+
+init();
+</script>
+</body>
+</html>
